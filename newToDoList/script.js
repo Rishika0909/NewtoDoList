@@ -2,49 +2,112 @@ let form = document.querySelector("form");
 let nameField = document.querySelector("#name");
 let taskField = document.querySelector("#task");
 let listdiv = document.querySelector("#list");
+let submitbtn = document.getElementById("submit");
 let tasks = [];
+let editIndex = false;
+let selectedIndex = null;
+
+//    table
+
+let datatable = document.createElement("table");
+datatable.className = "table";
+document.body.append(datatable);
+
+let tableheadings = document.createElement("thead");
+datatable.append(tableheadings);
+
+let tablerows = document.createElement("tr");
+tableheadings.append(tablerows);
+
+let todoname = document.createElement("td");
+todoname.innerText = "Name";
+tablerows.append(todoname);
+
+let todotask = document.createElement("td");
+todotask.innerText = "Task";
+tablerows.append(todotask);
+
+let todoactions = document.createElement("td");
+todoactions.innerText = "Actions";
+tablerows.append(todoactions);
+
+let tablerecord = document.createElement("tbody");
+tablerecord.className = "record";
+datatable.append(tablerecord);
+
+// form submition
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
+  if (editIndex === true) {
+    tasks[selectedIndex].name = nameField.value;
+    tasks[selectedIndex].task = taskField.value;
+
+    editIndex = false;
+    selectedIndex = null;
+
+    submitbtn.innerHTML = "Submit";
+  } else {
     let obj = {
-        id: Date.now(),
-        name: nameField.value,
-        task: taskField.value,
+      id: Date.now(),
+      name: nameField.value,
+      task: taskField.value,
     };
     tasks.push(obj);
     console.log(tasks);
+  }
 
-    form.reset();
+  form.reset();
 
-showOnDisplay();
-})
+  showOnDisplay();
+});
 
 function showOnDisplay() {
-    let lastTask = tasks[tasks.length-1];
+  tablerecord.innerHTML = "";
+  tasks.map((task, index) => {
+    let datarow = document.createElement("tr");
+    tablerecord.append(datarow);
 
-    let tablerecord = document.createElement("div");
-    tablerecord.className = "record";
-   listdiv.append(tablerecord);
+    let namep = document.createElement("td");
+    namep.innerHTML = task.name;
+    datarow.append(namep);
 
-    let namep = document.createElement("p");
-   namep.innerText = lastTask.name;
-   tablerecord.appendChild(namep);
+    let taskp = document.createElement("td");
+    taskp.innerHTML = task.task;
+    datarow.append(taskp);
 
-    let taskp = document.createElement("p");
-   taskp.innerText = lastTask.task;
-   tablerecord.appendChild(taskp);
+    let actionp = document.createElement("td");
+    datarow.append(actionp);
 
-    let actionp = document.createElement("p");
-    
-   tablerecord.appendChild(actionp);
+    let editIcon = document.createElement("i");
+    editIcon.className = "fa-solid fa-pencil";
+    actionp.append(editIcon);
 
-   let editIcon = document.createElement("i")
-   editIcon.className ="fa-solid fa-pencil";
-   actionp.append(editIcon);
+    let deleteIcon = document.createElement("i");
+    deleteIcon.className = "fa-solid fa-trash";
+    actionp.append(deleteIcon);
 
-    let deleteIcon = document.createElement("i")
-   deleteIcon.className ="fa-solid fa-trash";
-   actionp.append(deleteIcon);
+    deleteIcon.addEventListener("click", () => {
+      deleterow(index);
+    });
+    editIcon.addEventListener("click", () => {
+      editvalue(index);
+    });
+  });
+}
 
-   listdiv.append(tablerecord);
+function editvalue(index) {
+  editIndex = true;
+  selectedIndex = index;
+
+  nameField.value = tasks[selectedIndex].name;
+  taskField.value = tasks[selectedIndex].task;
+
+  submitbtn.innerHTML = "Update";
+}
+
+function deleterow(index) {
+  selectedIndex = index;
+  tasks.splice(selectedIndex, 1);
+  showOnDisplay();
 }

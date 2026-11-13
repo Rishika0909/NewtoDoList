@@ -3,6 +3,38 @@
   padding: 0;
   box-sizing: border-box;
 }
-#wrapper{
-    margin: 20px;
+#wrapper {
+  margin: 20px;
 }
+#todolist {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+form {
+  display: flex;
+  gap: 30px;
+}
+
+.table {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+tr {
+  border: 2px solid black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 100px;
+  padding: 10px;
+  width: 600px;
+}
+ 
